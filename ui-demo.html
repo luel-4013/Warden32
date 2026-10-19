@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warden32 — UI theme candidates (disposable)</title>
+<style>
+  :root{
+    --sans: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono: ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    /* default palette (each theme overrides these on its section) */
+    --bg:#0f1117; --panel:#151923; --side:#12151d; --border:#242b39; --text:#e7eaf0; --muted:#98a2b3;
+    --accent:#6ea8fe; --ok:#4ade80; --drop:#f87171; --warn:#fbbf24; --node:#1a1f2b;
+    --sideon: rgba(110,168,254,.09); --rowline:#1c2230;
+    --radius:12px; --radius-sm:8px;
+    --font-ui: var(--sans); --font-mono: var(--mono);
+    color-scheme: dark;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#131519; color:#e9ebef; font-family:var(--sans); }
+  .wrap{ max-width:1180px; margin:0 auto; padding:34px 20px 90px; }
+  .intro h1{ font-size:22px; margin:0 0 8px; letter-spacing:.2px; }
+  .intro p{ color:#a7adb8; font-size:13.5px; margin:5px 0; line-height:1.5; }
+  .intro code{ font-family:var(--mono); font-size:12px; background:#1d2129; border:1px solid #2a2f3a; border-radius:4px; padding:1px 5px; }
+  .theme{ margin-top:38px; }
+  .group{ margin:52px 0 -10px; font-family:var(--mono); font-size:12px; color:#8ab4f8; letter-spacing:.09em; text-transform:uppercase; }
+  .theme-meta{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .theme-meta .num{ font-family:var(--mono); font-size:12px; color:#8ab4f8; }
+  .theme-meta h2{ font-size:16px; margin:0; }
+  .theme-meta .nerd{ margin-left:auto; font-family:var(--mono); font-size:11px; color:#a7adb8; }
+  .theme-meta .nerd b{ color:#e9ebef; font-weight:600; }
+  .theme-meta .desc{ flex-basis:100%; margin:0; color:#a7adb8; font-size:12.5px; line-height:1.5; }
+  .mock{ border-radius:12px; overflow:hidden; box-shadow:0 14px 44px rgba(0,0,0,.45); }
+  .foot{ margin-top:44px; color:#a7adb8; font-size:12.5px; line-height:1.6; border-top:1px solid #262b34; padding-top:18px; }
+
+  /* ---------- app base (defaults = theme 04 palette) ---------- */
+  .app{
+    position:relative; background:var(--bg); color:var(--text); font-family:var(--font-ui);
+    font-size:12px; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+    display:flex; flex-direction:column;
+  }
+  .app *{ min-width:0; }
+  .topbar{ display:flex; align-items:center; gap:16px; padding:10px 14px; background:var(--panel); border-bottom:1px solid var(--border); }
+  .logo{ font-family:var(--font-mono); font-weight:700; font-size:12px; letter-spacing:.06em; white-space:nowrap; }
+  .logo .glyph{ color:var(--accent); }
+  .nav{ display:flex; gap:14px; color:var(--muted); font-size:11.5px; white-space:nowrap; }
+  .nav .on{ color:var(--accent); }
+  .hchips{ margin-left:auto; display:flex; gap:6px; }
+  .chip{ font-family:var(--font-mono); font-size:10px; padding:2.5px 8px; border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--muted); white-space:nowrap; }
+  .chip.ok{ color:var(--ok); } .chip.bad{ color:var(--drop); } .chip.warn{ color:var(--warn); }
+  .main{ display:grid; grid-template-columns:158px 1fr; }
+  .side{ border-right:1px solid var(--border); background:var(--side); padding:8px 0; }
+  .side .item{ padding:7px 14px; color:var(--muted); font-size:11.5px; border-left:2px solid transparent; }
+  .side .item.on{ color:var(--accent); border-left-color:var(--accent); background:var(--sideon); }
+  .content{ display:flex; flex-direction:column; min-width:0; }
+  .stage{ position:relative; padding:8px 4px 0; }
+  .toolbar{ display:flex; align-items:center; gap:9px; padding:0 12px 4px; font-family:var(--font-mono); font-size:10.5px; color:var(--muted); }
+  .toolbar select{ font-family:var(--font-mono); font-size:10.5px; background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:var(--radius-sm); padding:2px 6px; color-scheme:dark; }
+  .t5 .toolbar select{ color-scheme:light; }
+  .toolbar .hint{ margin-left:auto; opacity:.7; }
+  .modesel{ font-family:var(--font-mono); font-size:10.5px; background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:var(--radius-sm); padding:2px 6px; color-scheme:dark; }
+  .t5 .modesel, .t17 .modesel{ color-scheme:light; }
+  .accent{ color:var(--accent); } .dim{ color:var(--muted); }
+  .topo{ display:block; width:100%; height:auto; }
+  .topo .box{ fill:var(--node); stroke:var(--border); stroke-width:1; }
+  .topo .box.hot{ stroke:var(--accent); }
+  .topo .lbl{ font-family:var(--font-mono); fill:var(--text); font-size:11px; }
+  .topo .sub{ font-family:var(--font-mono); fill:var(--muted); font-size:8.5px; }
+  .topo .ref{ font-family:var(--font-mono); fill:var(--muted); font-size:8px; display:none; }
+  .topo .link{ stroke:var(--muted); opacity:.4; stroke-width:1.5; }
+  .topo .link.wifi{ stroke-dasharray:2 4; }
+  .topo .link.bypass{ stroke:var(--warn); opacity:.5; stroke-dasharray:4 5; }
+  .topo .p-ok{ fill:var(--ok); } .topo .p-bad{ fill:var(--drop); } .topo .p-warn{ fill:var(--warn); }
+  .topo .dropmark{ font-family:var(--font-mono); fill:var(--drop); font-size:11px; }
+  .topo .bypasslbl{ font-family:var(--font-mono); fill:var(--warn); font-size:8.5px; opacity:.85; }
+  .topo .buslbl{ font-family:var(--font-mono); fill:var(--muted); font-size:9px; letter-spacing:.06em; }
+  .topo .board{ fill:none; stroke:var(--muted); opacity:.35; stroke-dasharray:5 5; }
+  .topo .boardlbl{ font-family:var(--font-mono); fill:var(--muted); font-size:9px; letter-spacing:.06em; }
+  .topo .pins line{ stroke:var(--muted); opacity:.45; }
+  .topo .node{ cursor:pointer; }
+  .topo .node:hover .box{ stroke:var(--accent); }
+  .topo .node.sel .box{ stroke:var(--accent); stroke-width:1.6; }
+  .topo .node.off{ opacity:.45; }
+  .inspector{ position:absolute; left:16px; bottom:12px; width:238px; background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:var(--font-mono); font-size:10px; box-shadow:0 8px 24px rgba(0,0,0,.3); }
+  .inspector .ins-title{ color:var(--accent); font-size:10px; font-weight:700; letter-spacing:.05em; margin-bottom:5px; }
+  .inspector .ins-row{ display:flex; justify-content:space-between; gap:8px; color:var(--muted); padding:1.5px 0; }
+  .inspector .ins-row b{ color:var(--text); font-weight:500; text-align:right; }
+  .inspector .ins-empty{ color:var(--muted); line-height:1.4; }
+  .inspector .ins-edit{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:6px; padding-top:6px; border-top:1px solid var(--border); color:var(--muted); }
+  .inspector .insel{ font-family:var(--font-mono); font-size:10px; background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1px 4px; color-scheme:dark; }
+  .t5 .inspector .insel{ color-scheme:light; }
+  .tablewrap{ border-top:1px solid var(--border); }
+  table{ width:100%; border-collapse:collapse; font-family:var(--font-mono); font-size:10.5px; }
+  th{ text-align:left; font-weight:600; color:var(--muted); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; padding:7px 14px 5px; border-bottom:1px solid var(--border); }
+  td{ padding:5.5px 14px; border-bottom:1px solid var(--rowline); }
+  tr:last-child td{ border-bottom:none; }
+  .log{ border-top:1px solid var(--border); background:var(--panel); padding:8px 14px 10px; display:flex; flex-direction:column; gap:3.5px; font-family:var(--font-mono); font-size:10.5px; color:var(--muted); }
+  .log .t{ opacity:.65; }
+  .log .ok{ color:var(--ok); } .log .bad{ color:var(--drop); } .log .warn{ color:var(--warn); }
+
+  /* ---------- 01 · Terminal / PCB (suggested, softened) ---------- */
+  .t1{
+    --bg:#0c1116; --panel:#111820; --side:#0e151c; --border:#22303c; --text:#d9e4ec; --muted:#7f95a6;
+    --accent:#2fd6a8; --ok:#37d99b; --drop:#ff6f6f; --warn:#ffc46b; --node:#0f1720;
+    --sideon: rgba(47,214,168,.08); --rowline:#18232e;
+    --radius:6px; --radius-sm:4px; --font-ui: var(--mono);
+  }
+  .t1 .app::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.022) 0 1px, transparent 1px 3px);
+  }
+
+  /* ---------- 02 · Blueprint / schematic ---------- */
+  .t2{
+    --bg:#0a1626; --panel:#0d1d33; --side:#0b192c; --border:#1e3a5f; --text:#cfe3ff; --muted:#7d9cc4;
+    --accent:#6fb1ff; --ok:#58d68d; --drop:#ff7b72; --warn:#ffd166; --node:#0c1a2e;
+    --sideon: rgba(111,177,255,.1); --rowline:#16304f;
+    --radius:3px; --radius-sm:2px; --font-ui: var(--mono);
+  }
+  .t2 .stage{
+    background-image:linear-gradient(rgba(120,170,240,.07) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(120,170,240,.07) 1px, transparent 1px);
+    background-size:26px 26px;
+  }
+  .t2 .topo .box{ stroke-dasharray:3 3; }
+  .t2 .topo .lbl{ letter-spacing:.08em; }
+  .t2 .topo .ref{ display:block; }
+
+  /* ---------- 03 · Lab oscilloscope / retro instrument ---------- */
+  .t3{
+    --bg:#080d09; --panel:#0d1410; --side:#0b110c; --border:#1c2a1f; --text:#d5f2dc; --muted:#7d9c86;
+    --accent:#7dff9b; --ok:#6fe38a; --drop:#ff8f7a; --warn:#ffc46b; --node:#0c130e;
+    --sideon: rgba(125,255,155,.07); --rowline:#152018;
+    --radius:8px; --radius-sm:5px; --font-ui: var(--mono);
+  }
+  .t3 .app::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(140,255,170,.03) 0 1px, transparent 1px 4px);
+  }
+  .t3 .logo, .t3 .topo .lbl{ text-shadow:0 0 7px rgba(125,255,155,.4); }
+  .t3 .topo .box.hot{ stroke-width:1.5; }
+
+  /* ---------- 05 · Man-page / RFC light ---------- */
+  .t5{
+    --bg:#faf8f4; --panel:#f2efe8; --side:#f6f3ec; --border:#d8d2c4; --text:#2a2a28; --muted:#6f6a5e;
+    --accent:#8a5a00; --ok:#1a7f37; --drop:#b3261e; --warn:#9a6700; --node:#ffffff;
+    --sideon: rgba(138,90,0,.06); --rowline:#e8e4da;
+    --radius:6px; --radius-sm:4px;
+  }
+  .t5 .topbar{ border-bottom:2px solid var(--border); }
+  .t5 .logo{ letter-spacing:.1em; }
+  .t5 .topo .box{ stroke-width:1.2; }
+  .t5 .inspector{ box-shadow:0 8px 24px rgba(0,0,0,.12); }
+
+  /* ---------- 06 · Tokyo Night ---------- */
+  .t6{
+    --bg:#1a1b26; --panel:#1f2335; --side:#1b1e2e; --border:#2f334d; --text:#c0caf5; --muted:#565f89;
+    --accent:#7aa2f7; --ok:#9ece6a; --drop:#f7768e; --warn:#e0af68; --node:#16161e;
+    --sideon: rgba(122,162,247,.1); --rowline:#23263a;
+    --radius:8px; --radius-sm:6px; --font-ui: var(--mono);
+  }
+
+  /* ---------- 07 · Gruvbox Dark ---------- */
+  .t7{
+    --bg:#282828; --panel:#32302f; --side:#2b2927; --border:#504945; --text:#ebdbb2; --muted:#928374;
+    --accent:#fabd2f; --ok:#b8bb26; --drop:#fb4934; --warn:#fe8019; --node:#3c3836;
+    --sideon: rgba(250,189,47,.08); --rowline:#3c3836;
+    --radius:6px; --radius-sm:4px; --font-ui: var(--mono);
+  }
+
+  /* ---------- 08 · Catppuccin Mocha ---------- */
+  .t8{
+    --bg:#1e1e2e; --panel:#181825; --side:#1b1b2b; --border:#313244; --text:#cdd6f4; --muted:#7f849c;
+    --accent:#89b4fa; --ok:#a6e3a1; --drop:#f38ba8; --warn:#f9e2af; --node:#252637;
+    --sideon: rgba(137,180,250,.1); --rowline:#2a2c3f;
+    --radius:10px; --radius-sm:7px;
+  }
+
+  /* ---------- 09 · TUI (btop-style terminal) ---------- */
+  .t9{
+    --bg:#000000; --panel:#111111; --side:#050505; --border:#3a3a3a; --text:#e6e6e6; --muted:#8a8a8a;
+    --accent:#00d7ff; --ok:#33ff77; --drop:#ff4444; --warn:#ffdd33; --node:#0a0a0a;
+    --sideon: rgba(0,215,255,.1); --rowline:#1f1f1f;
+    --radius:0px; --radius-sm:0px; --font-ui: var(--mono);
+  }
+  .t9 .topbar{ background:#141414; border-bottom:2px solid var(--border); }
+  .t9 .chip{ border-color:#4a4a4a; }
+
+  /* ---------- 10 · Synthwave (restrained) ---------- */
+  .t10{
+    --bg:#180f26; --panel:#201534; --side:#1b1129; --border:#382a58; --text:#eadcff; --muted:#9a86c8;
+    --accent:#ff7edb; --ok:#5ef5d0; --drop:#ff5c8a; --warn:#ffd166; --node:#241740;
+    --sideon: rgba(255,126,219,.1); --rowline:#2b1d45;
+    --radius:8px; --radius-sm:5px; --font-ui: var(--mono);
+  }
+  .t10 .topbar{ background:linear-gradient(90deg, rgba(255,126,219,.1), rgba(94,245,208,.06) 60%, transparent), var(--panel); }
+
+  /* ---------- 11 · Solarized Dark ---------- */
+  .t11{
+    --bg:#002b36; --panel:#073642; --side:#06313c; --border:#14505e; --text:#93a1a1; --muted:#657b83;
+    --accent:#268bd2; --ok:#859900; --drop:#dc322f; --warn:#b58900; --node:#06333d;
+    --sideon: rgba(38,139,210,.12); --rowline:#0d4350;
+    --radius:6px; --radius-sm:4px;
+  }
+
+  /* ---------- 12 · Nord ---------- */
+  .t12{
+    --bg:#2e3440; --panel:#3b4252; --side:#353c4a; --border:#4c566a; --text:#eceff4; --muted:#7d8ba1;
+    --accent:#88c0d0; --ok:#a3be8c; --drop:#bf616a; --warn:#ebcb8b; --node:#343b4b;
+    --sideon: rgba(136,192,208,.12); --rowline:#434c5e;
+    --radius:8px; --radius-sm:6px;
+  }
+
+  /* ---------- 13 · Dracula ---------- */
+  .t13{
+    --bg:#282a36; --panel:#21222c; --side:#22232e; --border:#44475a; --text:#f8f8f2; --muted:#6272a4;
+    --accent:#bd93f9; --ok:#50fa7b; --drop:#ff5555; --warn:#f1fa8c; --node:#343746;
+    --sideon: rgba(189,147,249,.12); --rowline:#383a4a;
+    --radius:8px; --radius-sm:6px; --font-ui: var(--mono);
+  }
+
+  /* ---------- 14 · Amber CRT ---------- */
+  .t14{
+    --bg:#100b06; --panel:#1a120a; --side:#140e08; --border:#3a2a18; --text:#ffca7f; --muted:#b98a55;
+    --accent:#ffb454; --ok:#ffd27f; --drop:#ff6b3d; --warn:#ffe6b0; --node:#1e150c;
+    --sideon: rgba(255,180,84,.09); --rowline:#2a1e10;
+    --radius:6px; --radius-sm:4px; --font-ui: var(--mono);
+  }
+  .t14 .app::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(255,190,110,.03) 0 1px, transparent 1px 4px);
+  }
+  .t14 .logo{ text-shadow:0 0 7px rgba(255,180,84,.45); }
+
+  /* ---------- 15 · IDE workbench ---------- */
+  .t15{
+    --bg:#1e1e1e; --panel:#252526; --side:#2d2d30; --border:#3c3c3c; --text:#cccccc; --muted:#8a8a8a;
+    --accent:#007acc; --ok:#4ec9b0; --drop:#f14c4c; --warn:#dcdcaa; --node:#2d2d30;
+    --sideon: rgba(0,122,204,.18); --rowline:#2d2d2d;
+    --radius:0px; --radius-sm:4px;
+  }
+  .t15 .wtitle{ background:var(--panel); border-bottom:1px solid var(--border); padding:6px 12px; font-size:11px; color:var(--text); }
+  .t15 .ide-body{ display:grid; grid-template-columns:42px 168px 1fr 238px; flex:1; }
+  .t15 .activity{ background:#333333; border-right:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:16px; padding:12px 0; color:var(--muted); font-size:13px; }
+  .t15 .activity .ico.on{ color:var(--text); }
+  .t15 .explorer{ background:var(--side); border-right:1px solid var(--border); padding:8px 0; font-size:11px; color:var(--muted); }
+  .t15 .tree-i{ padding:3.5px 12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .t15 .tree-i.on{ background:rgba(255,255,255,.06); color:var(--text); }
+  .t15 .center{ display:flex; flex-direction:column; min-width:0; }
+  .t15 .tabs{ display:flex; background:var(--panel); border-bottom:1px solid var(--border); }
+  .t15 .tab{ padding:6px 12px; font-size:11px; color:var(--muted); border-right:1px solid var(--border); font-family:var(--font-mono); }
+  .t15 .tab.on{ color:var(--text); background:var(--bg); box-shadow:inset 0 2px 0 var(--accent); }
+  .t15 .tabs.sub .tab{ padding:4px 10px; font-size:10px; }
+  .t15 .bottompanel .log{ background:transparent; border-top:none; }
+  .t15 .props{ background:var(--side); border-left:1px solid var(--border); padding:10px; }
+  .t15 .prop-h{ font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .t15 .prop-row{ display:flex; justify-content:space-between; align-items:center; gap:6px; font-size:10.5px; color:var(--muted); margin-bottom:8px; }
+  .t15 .statusbar{ background:var(--accent); color:#ffffff; font-family:var(--font-mono); font-size:10px; padding:3px 12px; display:flex; gap:16px; }
+  .t15 .inspector{ position:static; width:auto; padding:0; background:transparent; border:none; box-shadow:none; }
+
+  /* ---------- 16 · Bento dashboard ---------- */
+  .t16{
+    --bg:#0b0d12; --panel:#12151c; --side:#0e1119; --border:#232936; --text:#e5e9f0; --muted:#8b93a7;
+    --accent:#8b5cf6; --ok:#22c55e; --drop:#ef4444; --warn:#eab308; --node:#171b24;
+    --sideon: rgba(139,92,246,.12); --rowline:#1b2130;
+    --radius:14px; --radius-sm:10px;
+  }
+  .t16 .bento{ display:grid; grid-template-columns:1.35fr 1fr; gap:10px; padding:12px; }
+  .t16 .card{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; min-width:0; }
+  .t16 .span2{ grid-column:1 / -1; }
+  .t16 .card-h{ display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .t16 .card-h .right{ margin-left:auto; display:flex; align-items:center; gap:6px; text-transform:none; letter-spacing:0; }
+  .t16 .minirule{ display:flex; justify-content:space-between; gap:10px; align-items:center; font-family:var(--font-mono); font-size:10px; color:var(--muted); padding:4px 0; border-bottom:1px solid var(--rowline); }
+  .t16 .minirule:last-child{ border-bottom:none; }
+  .t16 .stage{ padding:0; }
+  .t16 .inspector{ position:static; width:auto; padding:0; background:transparent; border:none; box-shadow:none; }
+  .t16 .tablewrap{ border-top:none; }
+  .t16 .log{ background:transparent; border-top:none; padding-left:0; padding-right:0; padding-bottom:0; }
+
+  /* ---------- 17 · Canvas-first (light) ---------- */
+  .t17{
+    --bg:#eef1f5; --panel:#ffffff; --side:#f8fafc; --border:#d5dae2; --text:#1f2937; --muted:#64748b;
+    --accent:#2563eb; --ok:#16a34a; --drop:#dc2626; --warn:#d97706; --node:#ffffff;
+    --sideon: rgba(37,99,235,.08); --rowline:#e6eaf0;
+    --radius:10px; --radius-sm:7px;
+  }
+  .t17 .canvas-wrap{ position:relative; }
+  .t17 .float-toolbar{ position:absolute; top:12px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:9px; background:var(--panel); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-family:var(--font-mono); font-size:10.5px; color:var(--muted); box-shadow:0 8px 24px rgba(15,23,42,.12); z-index:2; }
+  .t17 .float-left{ position:absolute; left:14px; bottom:14px; width:158px; background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; box-shadow:0 8px 24px rgba(15,23,42,.12); z-index:2; }
+  .t17 .fh{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .t17 .fitem{ font-family:var(--font-mono); font-size:10px; color:var(--text); padding:3.5px 0; border-bottom:1px solid var(--rowline); }
+  .t17 .fitem:last-child{ border-bottom:none; color:var(--accent); }
+  .t17 .zoombar{ position:absolute; right:14px; top:12px; display:flex; gap:6px; z-index:2; }
+  .t17 .zbtn{ width:26px; height:26px; display:flex; align-items:center; justify-content:center; background:var(--panel); border:1px solid var(--border); border-radius:6px; font-family:var(--font-mono); font-size:12px; color:var(--muted); }
+  .t17 .inspector{ left:auto; right:16px; bottom:14px; box-shadow:0 8px 24px rgba(15,23,42,.15); }
+
+  /* ---------- 18 · tmux split panes ---------- */
+  .t18{
+    --bg:#101010; --panel:#161616; --side:#0b0b0b; --border:#3a3a3a; --text:#d0d0d0; --muted:#808080;
+    --accent:#00d75f; --ok:#00d75f; --drop:#ff5f5f; --warn:#ffd75f; --node:#1a1a1a;
+    --sideon: rgba(0,215,95,.1); --rowline:#242424;
+    --radius:0px; --radius-sm:0px; --font-ui: var(--mono);
+  }
+  .t18 .tmux-grid{ display:grid; grid-template-columns:1.5fr 1fr; gap:1px; background:var(--border); flex:1; }
+  .t18 .pane{ background:var(--bg); display:flex; flex-direction:column; min-width:0; }
+  .t18 .pane-h{ background:var(--panel); border-bottom:1px solid var(--border); font-family:var(--font-mono); font-size:10px; color:var(--muted); padding:3px 8px; }
+  .t18 .pane-h b{ color:var(--accent); font-weight:600; }
+  .t18 .console-lines{ font-family:var(--font-mono); font-size:10.5px; color:var(--muted); padding:8px 14px; display:flex; flex-direction:column; gap:3.5px; }
+  .t18 .tmux-status{ background:#005f00; color:#afffaf; font-family:var(--font-mono); font-size:10px; padding:3px 8px; display:flex; gap:16px; }
+  .t18 .tmux-status .inv{ background:#afffaf; color:#005f00; padding:0 5px; }
+  .t18 .inspector{ position:static; width:auto; padding:10px 14px; background:transparent; border:none; box-shadow:none; }
+  .t18 .log{ border-top:none; background:transparent; }
+  .t18 .stage{ padding:4px 0 0; }
+
+  /* ---------- 19 · Terminal/PCB × IDE workbench × canvas floats × tmux (combined pick) ---------- */
+  .t19{
+    --bg:#0c1116; --panel:#111820; --side:#0e151c; --border:#22303c; --text:#d9e4ec; --muted:#7f95a6;
+    --accent:#2fd6a8; --ok:#37d99b; --drop:#ff6f6f; --warn:#ffc46b; --node:#0f1720;
+    --sideon: rgba(47,214,168,.08); --rowline:#18232e;
+    --radius:6px; --radius-sm:4px; --font-ui: var(--mono);
+  }
+  .t19 .app::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.022) 0 1px, transparent 1px 3px);
+  }
+  .t19 .wtitle{ background:var(--panel); border-bottom:1px solid var(--border); padding:6px 12px; font-size:11px; color:var(--text); }
+  .t19 .ide-body{ display:grid; grid-template-columns:42px 156px 1fr 248px; flex:1; }
+  .t19 .activity{ background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:16px; padding:12px 0; color:var(--muted); font-size:13px; }
+  .t19 .activity .ico.on{ color:var(--accent); }
+  .t19 .explorer{ background:var(--side); border-right:1px solid var(--border); padding:8px 0; font-size:11px; color:var(--muted); }
+  .t19 .tree-i{ padding:3.5px 12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .t19 .tree-i.on{ background:var(--sideon); color:var(--text); }
+  .t19 .center{ display:flex; flex-direction:column; min-width:0; }
+  .t19 .tabs{ display:flex; background:var(--panel); border-bottom:1px solid var(--border); }
+  .t19 .tab{ padding:6px 12px; font-size:11px; color:var(--muted); border-right:1px solid var(--border); font-family:var(--font-mono); }
+  .t19 .tab.on{ color:var(--accent); background:var(--bg); box-shadow:inset 0 2px 0 var(--accent); }
+  .t19 .canvas-wrap{
+    position:relative; flex:1; display:flex; flex-direction:column; justify-content:center;
+    background-image:linear-gradient(rgba(47,214,168,.035) 1px, transparent 1px),
+                     linear-gradient(90deg, rgba(47,214,168,.035) 1px, transparent 1px);
+    background-size:26px 26px;
+  }
+  .t19 .float-toolbar{ position:absolute; top:12px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:9px; background:var(--panel); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-family:var(--font-mono); font-size:10.5px; color:var(--muted); box-shadow:0 8px 24px rgba(0,0,0,.35); z-index:2; }
+  .t19 .zoombar{ position:absolute; left:14px; top:12px; display:flex; gap:6px; z-index:2; }
+  .t19 .zbtn{ width:26px; height:26px; display:flex; align-items:center; justify-content:center; background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:12px; color:var(--muted); }
+  .t19 .float-palette{ position:absolute; left:12px; bottom:6px; width:158px; background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-sm); box-shadow:0 8px 24px rgba(0,0,0,.35); z-index:2; overflow:hidden; }
+  .t19 .float-palette .fh{ display:flex; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:4px 8px; border-bottom:1px solid var(--border); background:rgba(47,214,168,.04); }
+  .t19 .float-palette .fbody{ display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:5px; background-image:linear-gradient(rgba(47,214,168,.03) 1px, transparent 1px),linear-gradient(90deg, rgba(47,214,168,.03) 1px, transparent 1px); background-size:13px 13px; }
+  .t19 .float-palette .fitem{ font-family:var(--font-mono); font-size:9.5px; color:var(--text); text-align:center; padding:4px 3px; background:var(--node); border:1px solid var(--border); border-radius:3px; cursor:pointer; }
+  .t19 .float-palette .fitem:hover{ border-color:var(--accent); }
+  .t19 .float-palette .fitem.wide{ grid-column:1 / -1; color:var(--accent); }
+  .t19 .side-pane{ border-left:1px solid var(--border); background:var(--side); display:flex; flex-direction:column; min-width:0; }
+  .t19 .r-pane{ display:flex; flex-direction:column; flex:1; min-height:0; border-bottom:1px solid var(--border); }
+  .t19 .r-pane:last-child{ border-bottom:none; }
+  .t19 .r-pane .inspector, .t19 .r-pane .panetab, .t19 .r-pane .console-lines{ flex:1; overflow:auto; scrollbar-width:thin; scrollbar-color:transparent transparent; }
+  .t19 .r-pane:hover .inspector, .t19 .r-pane:hover .panetab, .t19 .r-pane:hover .console-lines{ scrollbar-color:rgba(233,238,246,.6) transparent; }
+  .t19 .r-pane ::-webkit-scrollbar{ width:9px; height:9px; }
+  .t19 .r-pane ::-webkit-scrollbar-track{ background:transparent; }
+  .t19 .r-pane ::-webkit-scrollbar-thumb{ background:transparent; border-radius:5px; }
+  .t19 .r-pane:hover ::-webkit-scrollbar-thumb{ background:rgba(233,238,246,.6); }
+  .t19 .inspector{ position:static; width:auto; padding:10px; background:transparent; border:none; box-shadow:none; }
+  .t19 .panetab{ padding:8px 10px; display:flex; flex-direction:column; gap:4px; font-family:var(--font-mono); font-size:10px; color:var(--muted); }
+  .t19 .prow{ display:flex; justify-content:space-between; gap:8px; align-items:center; padding:3.5px 0; border-bottom:1px solid var(--rowline); }
+  .t19 .prow:last-child{ border-bottom:none; }
+  .t19 .prow .n{ opacity:.6; width:16px; }
+  .t19 .prow.add{ color:var(--accent); cursor:pointer; }
+  .t19 .pnote{ opacity:.7; font-size:9.5px; padding-top:2px; }
+  .t19 .prow.fresh{ animation:freshline .5s linear; }
+  @keyframes freshline{ from{ background:rgba(47,214,168,.22); } to{ background:transparent; } }
+  .t19 [hidden]{ display:none !important; }
+  .t19 .tab{ cursor:pointer; }
+  .t19 .pane-h{ background:var(--panel); border-bottom:1px solid var(--border); font-family:var(--font-mono); font-size:10px; color:var(--muted); padding:3px 8px; }
+  .t19 .pane-h b{ color:var(--accent); font-weight:600; }
+  .t19 .console-lines{ font-family:var(--font-mono); font-size:10.5px; color:var(--muted); padding:8px 14px; display:flex; flex-direction:column; gap:3.5px; }
+  .t19 .atk-list{ padding:8px 10px 6px; display:flex; flex-direction:column; gap:5px; font-family:var(--font-mono); font-size:10px; color:var(--muted); }
+  .t19 .atk-list label{ display:flex; gap:6px; align-items:center; cursor:pointer; }
+  .t19 .atk-list label:hover{ color:var(--text); }
+  .t19 .atk-list input{ accent-color:var(--drop); }
+  .t19 .afoot{ display:flex; gap:6px; padding:0 10px 8px; }
+  .t19 .abtn{ font-family:var(--font-mono); font-size:10px; padding:4px 10px; background:var(--node); color:var(--text); border:1px solid var(--border); border-radius:3px; cursor:pointer; }
+  .t19 .abtn.launch{ border-color:var(--drop); color:#ffb1b1; }
+  .t19 .abtn.ghost{ color:var(--muted); }
+  .t19 .asum{ padding:0 10px 8px; font-family:var(--font-mono); font-size:9.5px; display:flex; flex-direction:column; gap:3px; color:var(--muted); }
+  .t19 .asum .bad{ color:var(--drop); } .t19 .asum .warn{ color:var(--warn); } .t19 .asum .ok{ color:var(--ok); }
+  .t19 .prow.atk{ color:#ffb1b1; }
+  .t19 .chip.burn{ background:rgba(255,111,111,.16); color:#ffb1b1; border-color:rgba(255,111,111,.55); }
+  .t19 .console-lines .atk .bad{ color:var(--drop); }
+  .t19 .node.hit .box{ animation:hitpulse .9s ease-in-out 2; }
+  @keyframes hitpulse{ 0%,100%{ stroke:var(--border); } 50%{ stroke:var(--drop); stroke-width:2.4; } }
+  .t19 .statusbar [data-role="threat"].hot{ background:#3a0d0d; color:#ffb1b1; padding:0 6px; border-radius:3px; font-weight:600; }
+  .t19 .statusbar{ background:var(--accent); color:#06140f; font-family:var(--font-mono); font-size:10px; padding:3px 12px; display:flex; gap:16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="intro">
+    <h1>Warden32 — UI theme candidates</h1>
+    <p>Nineteen candidates. <b>#19 at the top is your combined pick</b> (Terminal/PCB + IDE workbench + canvas floats + tmux panes; final: floating device palette, independent right-side panes, and an attack lab with selectable/combined attack types). Batches 1–3 are skins; Batch 4 (15–18) are the separate layout styles. 01 is your original suggestion, softened.</p>
+    <p>Topology now reads like the real chain: <b>Internet → home router → [ chosen Ethernet module + ESP32, one board ] → Wi-Fi devices</b>. Try the <b>uplink module</b> dropdown (LAN8720 / W5500 / DM9051 / ENC28J60 / none=Wi-Fi STA) and <b>click any node</b> to inspect it — device nodes also expose an editable <b>device rule</b> (vendor-only / allow-all / block-all), a taste of the Packet-Tracer-style configurability to come. Green pulses = allowed, red = dropped inbound, yellow = the device-to-device bypass Wi-Fi AP mode cannot filter.</p>
+    <p>This file is now a <b>kept design kit</b>: #19 (rev3) is the chosen look, and the other 18 candidates stay available as palettes/layouts for future projects. No build step, no dependencies — open it anywhere.</p>
+  </div>
+  <div id="themes"></div>
+  <div class="foot">
+    Design kit — kept for future projects · No build step, no dependencies, works offline · matches <code>MASTER-BUILD-PROMPT.md §15.1</code>.
+  </div>
+</div>
+
+<script>
+const SVG = `
+<svg class="topo" viewBox="0 0 780 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <line class="link" x1="106" y1="148" x2="136" y2="148"/>
+  <line class="link" x1="254" y1="148" x2="316" y2="148"/>
+  <line class="link" x1="412" y1="148" x2="428" y2="148"/>
+  <path class="link wifi" d="M578 133 C 605 133 608 54 632 54" fill="none"/>
+  <line class="link wifi" x1="578" y1="149" x2="632" y2="149"/>
+  <path class="link wifi" d="M578 163 C 605 163 608 246 632 246" fill="none"/>
+  <path class="link bypass" d="M697 84 C 766 120 766 190 697 216" fill="none"/>
+  <text class="buslbl" x="277" y="164" text-anchor="middle" data-role="bus-lbl">RMII</text>
+  <text class="bypasslbl" x="774" y="150" transform="rotate(90 774 150)" text-anchor="middle">AP relay · unfiltered</text>
+
+  <circle r="3.5" class="p-ok"><animateMotion dur="2.6s" repeatCount="indefinite" path="M108 148 H134"/></circle>
+  <circle r="3.5" class="p-ok"><animateMotion dur="2.6s" begin="0.3s" repeatCount="indefinite" path="M256 148 H314"/></circle>
+  <circle r="3.5" class="p-ok"><animateMotion dur="2.6s" begin="0.6s" repeatCount="indefinite" path="M578 133 C 605 133 608 54 632 54"/></circle>
+  <circle r="3.5" class="p-ok"><animateMotion dur="2.6s" begin="0.9s" repeatCount="indefinite" path="M580 149 H630"/></circle>
+  <circle r="3.5" class="p-bad">
+    <animateMotion dur="2.6s" begin="1.3s" repeatCount="indefinite" path="M256 148 H294"/>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.75;0.9;1" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
+  </circle>
+  <text class="dropmark" x="292" y="141" text-anchor="middle">✕
+    <animate attributeName="opacity" values="0.15;0.15;1;0.15" keyTimes="0;0.8;0.92;1" dur="2.6s" begin="1.3s" repeatCount="indefinite"/>
+  </text>
+  <circle r="3.5" class="p-warn"><animateMotion dur="3.4s" repeatCount="indefinite" path="M697 84 C 766 120 766 190 697 216"/></circle>
+
+  <g class="pins">
+    <line x1="308" y1="132" x2="316" y2="132"/><line x1="308" y1="148" x2="316" y2="148"/><line x1="308" y1="164" x2="316" y2="164"/>
+    <line x1="412" y1="132" x2="420" y2="132"/><line x1="412" y1="148" x2="420" y2="148"/><line x1="412" y1="164" x2="420" y2="164"/>
+    <line x1="418" y1="118" x2="428" y2="118"/><line x1="418" y1="132" x2="428" y2="132"/><line x1="418" y1="146" x2="428" y2="146"/><line x1="418" y1="160" x2="428" y2="160"/><line x1="418" y1="174" x2="428" y2="174"/>
+    <line x1="578" y1="118" x2="588" y2="118"/><line x1="578" y1="132" x2="588" y2="132"/><line x1="578" y1="146" x2="588" y2="146"/><line x1="578" y1="160" x2="588" y2="160"/><line x1="578" y1="174" x2="588" y2="174"/>
+  </g>
+
+  <rect class="board" x="300" y="88" width="294" height="120" rx="10"/>
+  <text class="boardlbl" x="302" y="80" data-role="board-lbl">WARDEN32 BOARD · LAN8720</text>
+
+  <g class="node" data-id="up">
+    <rect class="box" x="14" y="122" width="92" height="52" rx="7"/>
+    <text class="lbl" x="60" y="144" text-anchor="middle">INTERNET</text>
+    <text class="sub" x="60" y="158" text-anchor="middle">ISP · WAN</text>
+    <text class="ref" x="14" y="116">J1</text>
+  </g>
+  <g class="node" data-id="router">
+    <rect class="box" x="136" y="122" width="118" height="52" rx="7"/>
+    <text class="lbl" x="195" y="144" text-anchor="middle">HOME ROUTER</text>
+    <text class="sub" x="195" y="158" text-anchor="middle">192.168.1.1/24</text>
+    <text class="ref" x="136" y="116">J2</text>
+  </g>
+  <g class="node" data-id="eth">
+    <rect class="box" x="316" y="112" width="96" height="72" rx="6"/>
+    <text class="lbl" x="364" y="142" text-anchor="middle" data-role="eth-name">LAN8720</text>
+    <text class="sub" x="364" y="156" text-anchor="middle" data-role="eth-sub">RMII · PHY addr 1</text>
+  </g>
+  <g class="node" data-id="esp32">
+    <rect class="box hot" x="428" y="104" width="150" height="88" rx="9"/>
+    <text class="lbl" x="503" y="136" text-anchor="middle">WARDEN32</text>
+    <text class="sub" x="503" y="152" text-anchor="middle">ESP32 · esp32_nat_router</text>
+    <text class="sub" x="503" y="166" text-anchor="middle">softAP · 10.0.0.1/24</text>
+    <text class="ref" x="428" y="98">U1</text>
+  </g>
+  <g class="node" data-id="cam">
+    <rect class="box" x="632" y="30" width="130" height="50" rx="7"/>
+    <text class="lbl" x="697" y="50" text-anchor="middle">GUEST-CAM</text>
+    <text class="sub" x="697" y="64" text-anchor="middle">10.0.0.11</text>
+    <text class="ref" x="632" y="24">D1</text>
+  </g>
+  <g class="node" data-id="plug">
+    <rect class="box" x="632" y="124" width="130" height="50" rx="7"/>
+    <text class="lbl" x="697" y="144" text-anchor="middle">SCRT-PLUG</text>
+    <text class="sub" x="697" y="158" text-anchor="middle">10.0.0.12</text>
+    <text class="ref" x="632" y="118">D2</text>
+  </g>
+  <g class="node" data-id="thermo">
+    <rect class="box" x="632" y="220" width="130" height="50" rx="7"/>
+    <text class="lbl" x="697" y="240" text-anchor="middle">THERMO</text>
+    <text class="sub" x="697" y="254" text-anchor="middle">10.0.0.13</text>
+    <text class="ref" x="632" y="214">D3</text>
+  </g>
+</svg>`;
+
+const TABLE = `
+<div class="tablewrap"><table>
+  <thead><tr><th>Time</th><th>Source</th><th>Destination</th><th>Proto</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>20:31:07</td><td>10.0.0.11</td><td>192.168.1.1:53</td><td>UDP/53</td><td><span class="chip ok">ALLOW</span></td></tr>
+    <tr><td>20:31:05</td><td>198.51.100.7</td><td>10.0.0.12:1883</td><td>TCP/1883</td><td><span class="chip bad">DROP</span></td></tr>
+    <tr><td>20:31:03</td><td>10.0.0.12</td><td>203.0.113.44:443</td><td>TCP/443</td><td><span class="chip ok">ALLOW</span></td></tr>
+    <tr><td>20:31:01</td><td>10.0.0.13</td><td>10.0.0.11:80</td><td>TCP/80</td><td><span class="chip warn">BYPASS</span></td></tr>
+  </tbody>
+</table></div>`;
+
+const LOG = `
+<div class="log">
+  <div><span class="t">20:31:07</span> <span class="ok">[OK]</span> inbound DNS answered for 10.0.0.11 via uplink</div>
+  <div><span class="t">20:31:05</span> <span class="bad">[DROP]</span> 198.51.100.7 → 10.0.0.12:1883 blocked by P-B default-deny inbound</div>
+  <div><span class="t">20:31:01</span> <span class="warn">[WARN]</span> 10.0.0.13 → 10.0.0.11 — L2 AP relay, outside lwIP; not enforceable</div>
+</div>`;
+
+const MODOPT = `
+            <option value="lan8720" selected>LAN8720 (RMII)</option>
+            <option value="w5500">W5500 (SPI)</option>
+            <option value="dm9051">DM9051 (SPI)</option>
+            <option value="enc28j60">ENC28J60 (SPI · 10M)</option>
+            <option value="none">none (Wi-Fi STA uplink)</option>`;
+
+const TOPBAR = `
+  <div class="topbar">
+    <div class="logo"><span class="glyph">▮</span> WARDEN32</div>
+    <div class="nav"><span class="on">Topology</span><span>Policies</span><span>Devices</span><span>Scenarios</span></div>
+    <div class="hchips"><span class="chip ok">P-B · STOCK ACL</span><span class="chip">seed 1337</span></div>
+  </div>`;
+
+const app = `
+<div class="app">
+  <div class="topbar">
+    <div class="logo"><span class="glyph">▮</span> WARDEN32</div>
+    <div class="nav"><span class="on">Topology</span><span>Policies</span><span>Devices</span><span>Scenarios</span></div>
+    <div class="hchips"><span class="chip ok">P-B · STOCK ACL</span><span class="chip">seed 1337</span></div>
+  </div>
+  <div class="main">
+    <div class="side">
+      <div class="item on">Topology</div><div class="item">Policies</div><div class="item">Devices</div>
+      <div class="item">Packet log</div><div class="item">Scenarios</div><div class="item">Claims matrix</div><div class="item">Settings</div>
+    </div>
+    <div class="content">
+      <div class="stage">
+        <div class="toolbar">
+          <span>uplink module:</span>
+          <select class="modesel">
+            <option value="lan8720" selected>LAN8720 (RMII)</option>
+            <option value="w5500">W5500 (SPI)</option>
+            <option value="dm9051">DM9051 (SPI)</option>
+            <option value="enc28j60">ENC28J60 (SPI · 10M)</option>
+            <option value="none">none (Wi-Fi STA uplink)</option>
+          </select>
+          <span class="hint">click any node to inspect ⤵</span>
+        </div>
+        ${SVG}
+        <div class="inspector"><div class="ins-empty">no selection — click any node; devices expose an editable rule</div></div>
+      </div>
+      ${TABLE}
+    </div>
+  </div>
+  ${LOG}
+</div>`;
+
+const MODULES = {
+  lan8720:{ name:"LAN8720", sub:"RMII · PHY addr 1", bus:"RMII",
+    title:"ETHERNET MODULE — LAN8720",
+    rows:[["bus","RMII · 50 MHz"],["driver","esp_eth (internal EMAC)"],["clock","from PHY (or GPIO0 in)"],["verdict","the classic ESP32 PHY"]] },
+  w5500:{ name:"W5500", sub:"SPI · 10/100", bus:"SPI",
+    title:"ETHERNET MODULE — W5500",
+    rows:[["bus","SPI · up to 30 MHz"],["driver","spi_eth_w5500"],["offload","hardware TCP/IP"],["verdict","needs 4 free GPIOs"]] },
+  dm9051:{ name:"DM9051", sub:"SPI · 10/100", bus:"SPI",
+    title:"ETHERNET MODULE — DM9051",
+    rows:[["bus","SPI"],["driver","spi_eth_dm9051"],["offload","MAC + PHY"],["verdict","cheap, fine at 5–10 Mbps"]] },
+  enc28j60:{ name:"ENC28J60", sub:"SPI · 10 Mbps", bus:"SPI",
+    title:"ETHERNET MODULE — ENC28J60",
+    rows:[["bus","SPI"],["driver","spi_eth_enc28j60"],["offload","none — CPU heavy"],["verdict","legacy, 10M only"]] },
+  none:{ name:"—", sub:"no module", bus:"—",
+    title:"ETHERNET MODULE — none",
+    rows:[["uplink","built-in Wi-Fi STA"],["note","2.4 GHz STA to home router"],["trade-off","radio shared with guest AP"]] }
+};
+
+const NODES = {
+  up:{ title:"INTERNET — ISP HANDOFF", rows:[["iface","eth · 100BASE-T"],["net","192.168.1.0/24"],["role","upstream (not in study)"]] },
+  router:{ title:"HOME ROUTER", rows:[["lan","192.168.1.1/24"],["dhcp/dns","served upstream"],["role","context only — out of scope"]] },
+  esp32:{ title:"WARDEN32 (ESP32)", rows:[["guest AP","10.0.0.1/24"],["policy","P-B · stateless ACL"],["note","no Wi-Fi client isolation"]] },
+  cam:{ title:"GUEST-CAM", rows:[["ip","10.0.0.11 · DHCP"],["link","Wi-Fi · guest SSID"],["note","vendor cloud reachback"]], rule:"vendor-only" },
+  plug:{ title:"SCRT-PLUG", rows:[["ip","10.0.0.12 · DHCP"],["link","Wi-Fi · guest SSID"],["note","MQTT callbacks outbound"]], rule:"allow-all" },
+  thermo:{ title:"THERMO", rows:[["ip","10.0.0.13 · DHCP"],["link","Wi-Fi · guest SSID"],["note","HTTP only, no TLS"]], rule:"block-all" }
+};
+
+const RULES = ["vendor-only", "allow-all", "block-all"];
+
+function wire(mock){
+  const sel      = mock.querySelector(".modesel");
+  const ethName  = mock.querySelector('[data-role="eth-name"]');
+  const ethSub   = mock.querySelector('[data-role="eth-sub"]');
+  const busLbl   = mock.querySelector('[data-role="bus-lbl"]');
+  const boardLbl = mock.querySelector('[data-role="board-lbl"]');
+  const ethNode  = mock.querySelector('.node[data-id="eth"]');
+  const insp     = mock.querySelector(".inspector");
+  const svg      = mock.querySelector(".topo");
+  let cur = null;
+
+  function show(id){
+    const d = id === "eth" ? MODULES[sel.value] : NODES[id];
+    let html = `<div class="ins-title">${d.title}</div>` +
+      d.rows.map(r => `<div class="ins-row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join("");
+    if(d.rule){
+      html += `<div class="ins-edit"><span>device rule</span><select class="insel">` +
+        RULES.map(o => `<option ${o === d.rule ? "selected" : ""}>${o}</option>`).join("") +
+        `</select></div>`;
+    }
+    insp.innerHTML = html;
+  }
+  function apply(){
+    const m = MODULES[sel.value];
+    ethName.textContent = m.name;
+    ethSub.textContent  = m.sub;
+    busLbl.textContent  = m.bus;
+    boardLbl.textContent = "WARDEN32 BOARD · " + (sel.value === "none" ? "no module" : m.name);
+    ethNode.classList.toggle("off", sel.value === "none");
+    const bw = mock.querySelector('[data-role="bw"]');
+    if(bw){
+      const cap  = sel.value === "enc28j60" ? 10 : sel.value === "none" ? 54 : 100;
+      const used = cap === 10 ? 6 : cap === 54 ? 32 : 60;
+      const bars = Math.round(used / cap * 5);
+      bw.textContent = (sel.value === "none" ? "Wi-Fi STA" : "WAN") + ` ${used}/${cap} Mbps · ` + "▮".repeat(bars) + "▯".repeat(5 - bars);
+    }
+    if(cur === "eth") show("eth");
+  }
+  sel.addEventListener("change", apply);
+  let tick = 9;
+  insp.addEventListener("change", e => {
+    const s = e.target.closest(".insel");
+    if(!s || !cur) return;
+    const d = NODES[cur];
+    if(!d || !d.rule) return;
+    d.rule = s.value;
+    const ip = String((d.rows[0] || ["", ""])[1]).split(" ")[0];
+    const map = { "vendor-only":["ok", "ALLOW", "vendor cloud"], "allow-all":["warn", "ALLOW", "any (WAN)"], "block-all":["bad", "DROP", "all egress"] };
+    const [cls, chip, dst] = map[s.value] || map["vendor-only"];
+    const list = mock.querySelector(".pkt-list");
+    if(!list) return;
+    tick += 2;
+    const row = document.createElement("div");
+    row.className = "prow fresh";
+    row.innerHTML = `<span>20:31:${String(tick).padStart(2, "0")}</span><span>${ip} → ${dst}</span><span class="chip ${cls}">${chip}</span>`;
+    list.insertBefore(row, list.querySelector(".prow, .pnote"));
+    const rows = list.querySelectorAll(".prow");
+    if(rows.length > 7) rows[rows.length - 1].remove();
+  });
+  svg.addEventListener("click", e => {
+    const g = e.target.closest(".node");
+    if(!g || !g.dataset.id) return;
+    cur = g.dataset.id;
+    mock.querySelectorAll(".topo .node.sel").forEach(n => n.classList.remove("sel"));
+    g.classList.add("sel");
+    show(cur);
+  });
+  apply();
+}
+
+function wireCombo(mock){
+  const tabs = mock.querySelectorAll(".tab[data-pane]");
+  if(!tabs.length) return;
+  function setPane(name, on){
+    const t = mock.querySelector(`.tab[data-pane="${name}"]`);
+    const p = mock.querySelector(`.r-pane[data-pane="${name}"]`);
+    if(t) t.classList.toggle("on", on);
+    if(p) p.hidden = !on;
+  }
+  tabs.forEach(t => t.addEventListener("click", () => {
+    const p = mock.querySelector(`.r-pane[data-pane="${t.dataset.pane}"]`);
+    if(p) setPane(t.dataset.pane, p.hidden);
+  }));
+  const topo = mock.querySelector(".topo");
+  if(topo) topo.addEventListener("click", e => { if(e.target.closest(".node")) setPane("inspect", true); });
+}
+
+function wireAttack(mock){
+  const list = mock.querySelector(".atk-list");
+  if(!list) return;
+  const launch = mock.querySelector(".abtn.launch");
+  const reset  = mock.querySelector(".abtn.reset");
+  const sum    = mock.querySelector(".asum");
+  const pkts   = mock.querySelector(".pkt-list");
+  const cons   = mock.querySelector('.r-pane[data-pane="console"] .console-lines');
+  const thr    = mock.querySelector('[data-role="threat"]');
+  let threats = 0, tick = 40;
+  function stamp(){ tick = tick >= 56 ? 40 : tick + 2; return "20:32:" + String(tick).padStart(2, "0"); }
+  function addRow(cls, chip, text, node){
+    if(pkts){
+      const row = document.createElement("div");
+      row.className = "prow atk fresh";
+      row.innerHTML = `<span>${stamp()}</span><span>${text}</span><span class="chip ${cls}">${chip}</span>`;
+      pkts.insertBefore(row, pkts.querySelector(".prow, .pnote"));
+      const rows = pkts.querySelectorAll(".prow");
+      if(rows.length > 9) rows[rows.length - 1].remove();
+    }
+    if(cons){
+      const div = document.createElement("div");
+      div.className = "atk";
+      div.innerHTML = `<span class="bad">[ATTACK]</span> ${text}`;
+      cons.insertBefore(div, cons.firstChild);
+      while(cons.children.length > 6) cons.lastElementChild.remove();
+    }
+    if(node){
+      const n = mock.querySelector(`.node[data-id="${node}"]`);
+      if(n){ n.classList.remove("hit"); void n.offsetWidth; n.classList.add("hit"); }
+    }
+    threats++;
+    if(thr){ thr.textContent = "⚠ threats " + threats; thr.classList.add("hot"); }
+  }
+  const DEFS = {
+    scan:    { res:[["bad", "DROP", "198.51.100.7 → 10.0.0.1:22 scan — P-B default-deny inbound", "esp32"]], sum:["ok", "port scan — blocked (default-deny inbound)"] },
+    sweep:   { res:[["bad", "DROP", "198.51.100.7 → 10.0.0.0/24 sweep — 256 hosts probed, all inbound denied", "esp32"]], sum:["ok", "host/service sweep — blocked (default-deny inbound)"] },
+    login:   { res:[["bad", "DROP", "203.0.113.9 → 10.0.0.1:80 admin — foreign login attempt denied inbound", "esp32"]], sum:["ok", "foreign login attempt — DROPPED (default-deny); an allow rule changes this"] },
+    c2:      { dynamic:true },
+    lateral: { res:[["warn", "BYPASS", "10.0.0.12 → 10.0.0.11 direct — L2 AP relay, outside lwIP", "plug"]], sum:["warn", "lateral move — BYPASSED (client-to-client, not enforceable)"] },
+    deauth:  { res:[["warn", "BYPASS", "deauth flood on guest SSID — 802.11 management, radio-level", "esp32"]], sum:["warn", "deauth flood — radio-level, not filterable"] },
+    ddos:    { res:[["burn", "EXHAUSTED", "SYN flood · 40k pps — NAPT table filling (1812/2048)", "esp32"],
+                    ["burn", "EXHAUSTED", "queue drops ↑ · CPU 100% · latency >400 ms", "esp32"],
+                    ["warn", "DEGRADED", "legit mDNS/RTSP for other clients timing out — stock cannot rate-limit", "esp32"]],
+               sum:["warn", "DDoS — NOT mitigated: resource exhaustion + collateral loss (no rate limiting on stock)"] }
+  };
+  function defFor(p){
+    if(p !== "c2") return DEFS[p];
+    const r = NODES.cam.rule || "vendor-only";
+    return r === "allow-all"
+      ? { res:[["warn", "ALLOW", "10.0.0.11 → 203.0.113.66:443 C2 — cam rule allow-all permits egress", "cam"]], sum:["warn", "C2 beacon — ALLOWED (cam rule: allow-all)"] }
+      : { res:[["bad", "DROP", "10.0.0.11 → 203.0.113.66:443 C2 — cam rule (" + r + ") denies", "cam"]], sum:["ok", "C2 beacon — dropped (cam rule: " + r + ")"] };
+  }
+  launch.addEventListener("click", () => {
+    const picks = Array.from(list.querySelectorAll("input:checked")).map(i => i.value);
+    sum.innerHTML = "";
+    if(!picks.length){ sum.innerHTML = '<div class="warn">select at least one attack</div>'; return; }
+    picks.forEach((p, i) => setTimeout(() => {
+      const d = defFor(p);
+      if(!d) return;
+      d.res.forEach((r, j) => setTimeout(() => addRow(r[0], r[1], r[2], r[3]), j * 260));
+      const s = document.createElement("div");
+      s.className = d.sum[0];
+      s.textContent = "▶ " + p + " — " + d.sum[1];
+      sum.appendChild(s);
+    }, (i + 1) * 420));
+  });
+  reset.addEventListener("click", () => {
+    threats = 0;
+    if(thr){ thr.textContent = "threats 0"; thr.classList.remove("hot"); }
+    sum.innerHTML = "";
+    if(pkts) pkts.querySelectorAll(".prow.atk").forEach(r => r.remove());
+    if(cons) cons.querySelectorAll(".atk").forEach(r => r.remove());
+    mock.querySelectorAll(".topo .node.hit").forEach(n => n.classList.remove("hit"));
+  });
+}
+
+const THEMES = [
+  { n:"19", cls:"t19", group:"Combined candidate — your requested mix", name:"Terminal/PCB × IDE × Canvas × tmux", nerd:"●●●●○ your pick",
+    desc:"Final: device palette floats on the canvas; inspect / rules.fw / packets.log / console / [5] attacks stack as independent panes on the right (topology owns the full center). Toggle panes via tabs; change a device rule and packets.log updates live; open [5] attacks and pick any combo (port scan, scan sweep, foreign login, DDoS, C2, lateral, deauth) — verdicts stream into packets.log + console, target nodes flash, C2 depends on the cam's rule, DDoS shows honest exhaustion instead of 'blocked'.",
+    build: () => `
+<div class="app combo">
+  <div class="wtitle"><span class="accent">▮</span> warden32 — iot firewall lab <span class="dim">· P-B · stateless ACL · seed 1337</span></div>
+  <div class="ide-body">
+    <div class="activity">
+      <span class="ico on">▤</span><span class="ico">◈</span><span class="ico">⇄</span><span class="ico">⚑</span><span class="ico">◍</span>
+    </div>
+    <div class="explorer">
+      <div class="tree-i"><b>▾ WARDEN32-LAB</b></div>
+      <div class="tree-i on">▾ topology</div>
+      <div class="tree-i">▸ devices (3)</div>
+      <div class="tree-i">▸ rules (4)</div>
+      <div class="tree-i">▸ scenarios (12)</div>
+      <div class="tree-i">▸ experiments (6)</div>
+    </div>
+    <div class="center">
+      <div class="tabs"><span class="tab on" data-pane="inspect">inspect</span><span class="tab on" data-pane="rules.fw">rules.fw</span><span class="tab on" data-pane="packets.log">packets.log</span><span class="tab on" data-pane="console">console</span><span class="tab" data-pane="attacks">attacks</span><span class="tab dim">＋ open…</span></div>
+      <div class="canvas-wrap">
+        ${SVG}
+        <div class="float-toolbar"><span>uplink module:</span><select class="modesel">${MODOPT}</select><span class="dim">click any node to inspect</span></div>
+        <div class="zoombar"><span class="zbtn">＋</span><span class="zbtn">−</span><span class="zbtn">↺</span></div>
+        <div class="float-palette">
+          <div class="fh"><span>device palette</span><span>⠿</span></div>
+          <div class="fbody">
+            <div class="fitem">▣ cam</div>
+            <div class="fitem">▢ plug</div>
+            <div class="fitem">◍ thermo</div>
+            <div class="fitem wide">＋ custom…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="side-pane">
+      <div class="r-pane" data-pane="inspect">
+        <div class="pane-h"><b>[1]</b> inspect <span class="dim">· node</span></div>
+        <div class="inspector"><div class="ins-empty">click a node — devices expose an editable rule</div></div>
+      </div>
+      <div class="r-pane" data-pane="rules.fw">
+        <div class="pane-h"><b>[2]</b> rules.fw <span class="dim">· live</span></div>
+        <div class="panetab">
+          <div class="prow"><span class="n">01</span><span>allow guest → uplink DNS</span><span class="chip ok">ALLOW</span></div>
+          <div class="prow"><span class="n">02</span><span>allow guest → uplink HTTP/S</span><span class="chip ok">ALLOW</span></div>
+          <div class="prow"><span class="n">03</span><span>deny WAN → guest inbound</span><span class="chip bad">DROP</span></div>
+          <div class="prow"><span class="n">04</span><span>cam → vendor cloud only</span><span class="chip warn">GROUP</span></div>
+          <div class="prow add">＋ add rule…</div>
+          <div class="pnote">edits apply live · drag to reorder</div>
+        </div>
+      </div>
+      <div class="r-pane" data-pane="packets.log">
+        <div class="pane-h"><b>[3]</b> packets.log <span class="dim">· tail</span></div>
+        <div class="panetab pkt-list">
+          <div class="prow"><span>20:31:07</span><span>10.0.0.11 → :53</span><span class="chip ok">ALLOW</span></div>
+          <div class="prow"><span>20:31:05</span><span>198.51.100.7 → :1883</span><span class="chip bad">DROP</span></div>
+          <div class="prow"><span>20:31:03</span><span>10.0.0.12 → :443</span><span class="chip ok">ALLOW</span></div>
+          <div class="prow"><span>20:31:01</span><span>10.0.0.13 → 10.0.0.11</span><span class="chip warn">BYPASS</span></div>
+          <div class="pnote">live tail · filterable · exportable</div>
+        </div>
+      </div>
+      <div class="r-pane" data-pane="console">
+        <div class="pane-h"><b>[4]</b> console <span class="dim">· boot</span></div>
+        <div class="console-lines">
+          <div>esptool: chip ESP32-D0WD · 240 MHz · 520 KB</div>
+          <div>eth: lan8720 @ phy-addr 1 · link up 100M</div>
+          <div>wifi: softAP "IoT guest" · ch 6 · max 8</div>
+          <div>lwip: NAPT 12/2048 · fw nat_router</div>
+        </div>
+      </div>
+      <div class="r-pane" data-pane="attacks" hidden>
+        <div class="pane-h"><b>[5]</b> attacks <span class="dim">· attack lab</span></div>
+        <div class="atk-list">
+          <label><input type="checkbox" value="scan" checked> port scan · WAN → guest</label>
+          <label><input type="checkbox" value="sweep"> scan sweep · hosts + services</label>
+          <label><input type="checkbox" value="login"> login attempt · foreign IP</label>
+          <label><input type="checkbox" value="ddos"> DDoS · SYN/UDP flood</label>
+          <label><input type="checkbox" value="c2"> C2 beacon · cam → cloud</label>
+          <label><input type="checkbox" value="lateral"> lateral move · plug → cam</label>
+          <label><input type="checkbox" value="deauth"> deauth flood · radio</label>
+        </div>
+        <div class="afoot"><button class="abtn launch">▶ launch</button><button class="abtn ghost reset">reset</button></div>
+        <div class="asum"></div>
+      </div>
+    </div>
+  </div>
+  <div class="statusbar"><span>warden32 · terminal/pcb</span><span>P-B · stateless ACL</span><span>seed 1337</span><span>13 nodes · 12 links</span><span data-role="bw">WAN 60/100 Mbps · ▮▮▮▯▯</span><span data-role="threat">threats 0</span><span>radio: AP + STA mux</span></div>
+</div>` },
+  { n:"01", cls:"t1", group:"Batch 1 — mild & professional", name:"Terminal / PCB", nerd:"●●●●○ moderate",
+    desc:"Your original §15.1 suggestion, softened: charcoal terminal panel, mono type, bracket tags, faint scanlines; the board sits on a circuit-style canvas." },
+  { n:"02", cls:"t2", group:"Batch 1 — mild & professional", name:"Blueprint / Schematic", nerd:"●●●●○ technical",
+    desc:"Deep-blue engineering drawing: grid paper, thin linework, J1/U1/D1 reference designators. Datasheet/EDA energy." },
+  { n:"03", cls:"t3", group:"Batch 1 — mild & professional", name:"Lab Oscilloscope", nerd:"●●●○○ moderate",
+    desc:"Phosphor green on near-black with faint scanlines and a soft glow; the console reads like a lab instrument log." },
+  { n:"04", cls:"t4", group:"Batch 1 — mild & professional", name:"Dev-tool Dark", nerd:"●○○○○ minimal",
+    desc:"Modern IDE / Linear-style dark UI. Mono only for addresses, IDs and timestamps. Almost no costume — the safest \"product\" look." },
+  { n:"05", cls:"t5", group:"Batch 1 — mild & professional", name:"Man-page / RFC (light)", nerd:"●●○○○ light",
+    desc:"Paper-light theme with man-page/RFC typography; reads like documentation. Good for daylight and for paper screenshots." },
+
+  { n:"06", cls:"t6", group:"Batch 2 — dev-culture favourites", name:"Tokyo Night", nerd:"●●●○○ dev favourite",
+    desc:"The beloved Tokyo Night palette: midnight navy, soft pastel accents. Popular with the terminal/Neovim crowd, still easy on the eyes." },
+  { n:"07", cls:"t7", group:"Batch 2 — dev-culture favourites", name:"Gruvbox Dark", nerd:"●●●○○ dev favourite",
+    desc:"Warm retro palette: beige on brown, amber highlights. A Vim legend, cosy rather than loud." },
+  { n:"08", cls:"t8", group:"Batch 2 — dev-culture favourites", name:"Catppuccin Mocha", nerd:"●●○○○ soft",
+    desc:"Pastel dark from the Catppuccin family — gentle, friendly, hugely popular in dev tooling. Keeps the sans font for a softer feel." },
+  { n:"09", cls:"t9", group:"Batch 2 — dev-culture favourites", name:"TUI / btop", nerd:"●●●●○ terminal purist",
+    desc:"Raw terminal dashboard: pure black, bright ANSI colours, sharp corners. The most \"TUI\" of the set — include only if you want the full terminal feel." },
+  { n:"10", cls:"t10", group:"Batch 2 — dev-culture favourites", name:"Synthwave (restrained)", nerd:"●●●●○ retro-future",
+    desc:"Retro-future purple / cyan / pink kept under control; a soft gradient in the top bar. Outrun vibes without the retina burn." },
+
+  { n:"11", cls:"t11", group:"Batch 3 — classics & retro", name:"Solarized Dark", nerd:"●●●○○ classic",
+    desc:"Ethan Schoonover's iconic Solarized palette: teal-dark base with a restrained accent set. A decade-old favourite of the Unix crowd." },
+  { n:"12", cls:"t12", group:"Batch 3 — classics & retro", name:"Nord", nerd:"●●●○○ arctic minimal",
+    desc:"The polar blue-grey Nord palette — calm, cold, extremely tidy. Feels like clean lab equipment." },
+  { n:"13", cls:"t13", group:"Batch 3 — classics & retro", name:"Dracula", nerd:"●●●●○ bold favourite",
+    desc:"The famous Dracula theme: charcoal-purple with vivid accents. Fun, but still readable for long sessions." },
+  { n:"14", cls:"t14", group:"Batch 3 — classics & retro", name:"Amber CRT", nerd:"●●●●○ retro purist",
+    desc:"Amber-on-brown monochrome like a 1980s terminal; warm glow and faint scanlines. The green scope's warmer sibling." },
+
+  { n:"15", cls:"t15", group:"Batch 4 — different layout styles", name:"IDE Workbench", nerd:"●●●○○ pro tool",
+    desc:"VSCode-style workbench: activity bar, explorer tree, editor tabs, bottom log panel, properties pane, status bar. The professional tool layout.",
+    build: () => `
+<div class="app ide">
+  <div class="wtitle"><span class="accent">▮</span> warden32 — iot firewall lab <span class="dim">· P-B · seed 1337</span></div>
+  <div class="ide-body">
+    <div class="activity">
+      <span class="ico on">▤</span><span class="ico">◈</span><span class="ico">⇄</span><span class="ico">⚑</span><span class="ico">◍</span>
+    </div>
+    <div class="explorer">
+      <div class="tree-i"><b>▾ WARDEN32-LAB</b></div>
+      <div class="tree-i on">▾ topology</div>
+      <div class="tree-i">▸ devices (3)</div>
+      <div class="tree-i">▸ rules (4)</div>
+      <div class="tree-i">▸ scenarios (12)</div>
+      <div class="tree-i">▸ experiments (6)</div>
+    </div>
+    <div class="center">
+      <div class="tabs"><span class="tab on">topology.sim</span><span class="tab">rules.fw</span><span class="tab">packets.log</span></div>
+      <div class="stage">${SVG}</div>
+      <div class="bottompanel">
+        <div class="tabs sub"><span class="tab on">PACKET LOG</span><span class="tab">OUTPUT</span><span class="tab">PROBLEMS</span></div>
+        ${LOG}
+      </div>
+    </div>
+    <div class="props">
+      <div class="prop-h">properties</div>
+      <div class="prop-row"><span>uplink module</span><select class="modesel">${MODOPT}</select></div>
+      <div class="inspector"><div class="ins-empty">select a node in the topology — device rules are editable here</div></div>
+    </div>
+  </div>
+  <div class="statusbar"><span>warden32-ide</span><span>P-B · stateless ACL</span><span>seed 1337</span><span>13 nodes · 12 links</span></div>
+</div>` },
+  { n:"16", cls:"t16", group:"Batch 4 — different layout styles", name:"Bento Dashboard", nerd:"●●○○○ product",
+    desc:"No sidebar — a card grid: topology card, rules card, inspector card, packets and console cards. Modern app-product feel.",
+    build: () => `
+<div class="app bento-app">
+  ${TOPBAR}
+  <div class="bento">
+    <div class="card span2">
+      <div class="card-h">topology <span class="right">uplink: <select class="modesel">${MODOPT}</select></span></div>
+      <div class="stage">${SVG}</div>
+    </div>
+    <div class="card">
+      <div class="card-h">rules · P-B baseline</div>
+      <div class="minirule"><span>guest → uplink (DNS/HTTP/HTTPS)</span><span class="chip ok">ALLOW</span></div>
+      <div class="minirule"><span>WAN → guest inbound (any)</span><span class="chip bad">DROP</span></div>
+      <div class="minirule"><span>guest-cam → vendor cloud only</span><span class="chip warn">GROUP</span></div>
+      <div class="minirule"><span>guest → guest (L2 relay)</span><span class="chip warn">NOT ENFORCED</span></div>
+    </div>
+    <div class="card">
+      <div class="card-h">inspector</div>
+      <div class="inspector"><div class="ins-empty">click a node — devices expose an editable rule</div></div>
+    </div>
+    <div class="card span2">
+      <div class="card-h">latest packets</div>
+      ${TABLE}
+    </div>
+    <div class="card span2">
+      <div class="card-h">console</div>
+      ${LOG}
+    </div>
+  </div>
+</div>` },
+  { n:"17", cls:"t17", group:"Batch 4 — different layout styles", name:"Canvas-first (light)", nerd:"●●○○○ Packet-Tracer-ish",
+    desc:"The topology IS the app: floating toolbar, device palette, zoom buttons and inspector floating over a light canvas — Packet Tracer for IoT.",
+    build: () => `
+<div class="app canvas-app">
+  ${TOPBAR}
+  <div class="canvas-wrap">
+    ${SVG}
+    <div class="float-toolbar"><span>uplink module:</span><select class="modesel">${MODOPT}</select><span class="dim">click any node to inspect</span></div>
+    <div class="float-left">
+      <div class="fh">device palette</div>
+      <div class="fitem">＋ IP camera</div>
+      <div class="fitem">＋ smart plug</div>
+      <div class="fitem">＋ thermostat</div>
+      <div class="fitem">＋ custom device…</div>
+    </div>
+    <div class="zoombar"><span class="zbtn">＋</span><span class="zbtn">−</span><span class="zbtn">↺</span></div>
+    <div class="inspector"><div class="ins-empty">click a node — devices expose an editable rule</div></div>
+  </div>
+</div>` },
+  { n:"18", cls:"t18", group:"Batch 4 — different layout styles", name:"tmux Split Panes", nerd:"●●●●○ terminal native",
+    desc:"Everything is panes: topology, inspector, packet log, console, with a green tmux status bar. Terminal-native workflow.",
+    build: () => `
+<div class="app tmux-app">
+  <div class="tmux-grid">
+    <div class="pane">
+      <div class="pane-h"><b>[0]</b> topology — warden32</div>
+      <div class="toolbar"><span>uplink:</span><select class="modesel">${MODOPT}</select><span class="hint">click node → inspect</span></div>
+      <div class="stage">${SVG}</div>
+    </div>
+    <div class="pane">
+      <div class="pane-h"><b>[1]</b> inspect</div>
+      <div class="inspector"><div class="ins-empty">click a node — devices expose an editable rule</div></div>
+    </div>
+    <div class="pane">
+      <div class="pane-h"><b>[2]</b> packet log</div>
+      ${LOG}
+    </div>
+    <div class="pane">
+      <div class="pane-h"><b>[3]</b> console</div>
+      <div class="console-lines">
+        <div>esptool: chip ESP32-D0WD · 240 MHz · 520 KB SRAM</div>
+        <div>eth: lan8720 @ phy-addr 1 · link up 100M</div>
+        <div>wifi: softAP "IoT guest" · ch 6 · 8-max clients</div>
+        <div>lwip: NAPT table 12/2048 entries · fw nat_router</div>
+      </div>
+    </div>
+  </div>
+  <div class="tmux-status"><span class="inv">[warden32]</span><span>0:topology*</span><span>1:inspect</span><span>2:packet-log</span><span>3:console</span><span>seed 1337</span></div>
+</div>` }
+];
+
+const host = document.getElementById("themes");
+let lastGroup = null;
+host.innerHTML = THEMES.map(t => {
+  const head = t.group !== lastGroup ? `<h3 class="group">${t.group}</h3>` : "";
+  lastGroup = t.group;
+  const body = t.build ? t.build() : app;
+  return `${head}
+  <section class="theme ${t.cls}">
+    <div class="theme-meta">
+      <span class="num">${t.n}</span><h2>${t.name}</h2>
+      <span class="nerd">nerd level <b>${t.nerd}</b></span>
+      <p class="desc">${t.desc}</p>
+    </div>
+    <div class="mock">${body}</div>
+  </section>`;
+}).join("");
+document.querySelectorAll(".mock").forEach(wire);
+document.querySelectorAll(".mock").forEach(wireCombo);
+document.querySelectorAll(".mock").forEach(wireAttack);
+</script>
+</body>
+</html>

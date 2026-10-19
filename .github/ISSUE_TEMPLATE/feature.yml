@@ -1,0 +1,17 @@
+name: Feature request
+description: Propose a device, board, adapter, firmware profile, scenario or feature
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should be added
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Source / provenance
+      description: Every new number or claim needs measured | datasheet | paper | estimate | assumption provenance.
+    validations:
+      required: true

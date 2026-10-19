@@ -1,0 +1,30 @@
+name: Bug report
+description: Something behaves incorrectly or dishonestly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Include the firmware profile, baseline (P-A/P-B/P-C) and the flow or scenario you ran.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: engine
+    attributes:
+      label: Engine version and project seed
+    validations:
+      required: false
+  - type: checkboxes
+    id: honesty
+    attributes:
+      label: Honesty check
+      options:
+        - label: This is not a request to present simulated measurements as hardware evidence.
+          required: true

@@ -1,0 +1,393 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R] /Count 7 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 6138 >>
+stream
+BT /F2 15 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 787.89 Tm (Warden32 — User Guide) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 768.09 Tm (Version 0.3.0 · MIT · completely offline \(no network, no telemetry\)) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 750.89 Tm (Warden32 is a deterministic browser lab for studying what an ESP32-based) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 733.69 Tm (guest-network firewall/NAT router \(ESP32-WROOM-32D + LAN8720, stock ESP-IDF) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 716.49 Tm (Wi-Fi + lwIP\) can and cannot enforce. You build a small network, give IoT) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 699.29 Tm (devices behaviour, attack it, watch the real evaluation pipeline decide every) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 682.09 Tm (flow, and export reproducible artifacts.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 664.89 Tm (Every number in the UI is tagged with its provenance — measured,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 647.69 Tm (datasheet, paper, estimate or assumption — and anything the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 630.49 Tm (firmware cannot enforce is labelled not enforceable instead of quietly) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 613.29 Tm (pretending to block it. This guide teaches the UI; the deep engineering docs) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 596.09 Tm (are linked at the end.) Tj ET
+BT /F1 8 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 578.89 Tm (--------------------------------------------------------------------------------------------) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 547.29 Tm (1. Install and run) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 532.79 Tm (Requirements: Node.js 20+ \(developed on v26\), any modern browser. No network) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 515.59 Tm (access is required at runtime; everything runs locally.) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 498.39 Tm (  npm install) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 488.39 Tm (  npm run dev        # http://localhost:5173 — development server) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 478.39 Tm (  npm run typecheck  # tsc --noEmit) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 468.39 Tm (  npm test           # 144 deterministic tests) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 458.39 Tm (  npm run build      # typecheck + production build into dist/) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 448.39 Tm (  npm run preview    # serve the production build) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 432.39 Tm (Opening dist/index.html via file:// also works. Projects are stored as) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 415.19 Tm (JSON \(.warden32\); the app never sends data anywhere.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 382.99 Tm (2. The shell) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 368.49 Tm (  +------------------------------------------------------------------+) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 358.49 Tm (  | top bar: new | open | save | firmware | project | run battery    |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 348.49 Tm (  +---------+---------------------------------------------+----------+) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 338.49 Tm (  | explorer| page tabs \(14 pages, scroll horizontally\)  |  right   |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 328.49 Tm (  | groups  |                                             |  pane    |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 318.49 Tm (  |         | page content \(panes, tables, forms\)         | inspect  |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 308.49 Tm (  |         |                                             | conns    |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 298.49 Tm (  |         |                                             | rules    |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 288.49 Tm (  |         |                                             | console  |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 278.49 Tm (  |         |                                             | packets  |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 268.49 Tm (  +---------+---------------------------------------------+----------+) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 258.49 Tm (  | status bar: project · baseline · dialect · seed · nodes · link · |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 248.49 Tm (  |             engine version · deterministic                       |) Tj ET
+BT /F1 8 Tf 0.15 0.3 0.3 rg 1 0 0 1 54.00 238.49 Tm (  +------------------------------------------------------------------+) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 220.49 Tm (- Explorer \(left\) — devices grouped by zone; click any device to inspect) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 209.29 Tm (it. Groups mirror the sample project: INTERNET, ATTACKER, VENDOR CLOUD,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 192.09 Tm (C2 SERVER, DNS RESOLVER, NTP SERVER, UPSTREAM LAN, HOME ROUTER, GUEST WI-FI,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 174.89 Tm (ESP32 ROUTER, TRUSTED LAN, MANAGEMENT.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 155.69 Tm (- Right pane — five tabs: inspect \(selected device\), connections) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 144.49 Tm (\(conntrack table\), rules \(hits per rule\), console \(sim event stream\),) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 127.29 Tm (packets \(per-flow pipeline trace, 5 stages\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 108.09 Tm (- Status bar — current project, experiment baseline \(P-A/P-B/P-C\),) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 96.89 Tm (firewall dialect, seed, device count, WAN link state, engine version.) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 32.00 Tm (Warden32 User Guide - engine 0.3.0) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 496.28 32.00 Tm (page 1 / 7) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 5327 >>
+stream
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 787.89 Tm ("deterministic" reminds you the same inputs always replay identically.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 770.69 Tm (Deep links: ?page=<id> opens a specific page \(overview, topology,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 753.49 Tm (devices, activity, traffic, rules, attacks, incident, resources,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 736.29 Tm (experiments, compare, hardware, registry, docs\). Activity adds) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 719.09 Tm (&run=activity, &run=activity-normal or &run=activity-compromised to run) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 701.89 Tm (immediately on load — useful for demos and screenshots.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 669.69 Tm (3. Projects and firmware) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 653.19 Tm (- new — restores the deterministic sample lab \(seed 1337\): public WAN) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 641.99 Tm (192.168.1.23, guest Wi-Fi 10.0.0.0/24, three managed IoT devices, uplink) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 624.79 Tm (locked infrastructure devices, and a few sample flows.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 605.59 Tm (- save / open — writes/reads .warden32 JSON. Drag a file onto the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 594.39 Tm (window to open it. Validation runs on load; non-blocking findings are shown) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 577.19 Tm (as warnings, structural errors refuse the file.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 557.99 Tm (- firmware — switches the simulated build:) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 544.79 Tm (  - stock-eth / stock-wifi \(ESP-IDF stock, 4-list ACL, default-ALLOW\);) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 531.59 Tm (  - softap-sta \(SoftAP + STA, no filtering at all\);) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 518.39 Tm (  - target-v1 \(the stateful reference dialect used as the design target\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 507.19 Tm (Switching resets results honestly \(old verdicts would be stale\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 487.99 Tm (- run battery \(>\) — reruns the built-in sample flow set.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 474.79 Tm (- Autosave — the current project is saved to localStorage continuously and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 463.59 Tm (reloaded on start. If you upgraded from an older version and the page looks) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 446.39 Tm (stale, press new \(or open a file\) — the old autosave is still a valid) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 429.19 Tm (project, it just keeps its old devices.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 396.99 Tm (4. Devices and bandwidth \(M10\)) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 382.49 Tm (Open the devices page. You need it for two M10 features: adding IoT) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 365.29 Tm (devices and configuring bandwidth.) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 337.09 Tm (4.1 Add a device) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 324.59 Tm ([add device] pane:) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 305.39 Tm (- archetype — 17 IoT archetypes \(IP camera, smart plug, thermostat,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 294.19 Tm (doorbell, printer, TV, speaker, sensor, hub, lock, baby monitor, robot) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 276.99 Tm (vacuum, e-reader, console, ...\). Each carries a default traffic profile and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 259.79 Tm (a default demand in Mbps.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 240.59 Tm (- zone — guest \(the Wi-Fi AP\), trusted or mgmt. Interfaces of) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 229.39 Tm (trusted/mgmt start DOWN in the sample; activity is dropped for devices on) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 212.19 Tm (down links \(with a note\), so bring the interface up first on the topology) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 194.99 Tm (page if you add devices there.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 175.79 Tm (- name — free text; the id is a slug plus a suffix.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 162.59 Tm (- demand Mbps — optional override of the archetype default volume.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 149.39 Tm (- cap Mbps — optional per-device cap \(see 4.3\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 138.19 Tm (The device gets the next free 10.x.0.x address from its zone and a fresh) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 120.99 Tm (3c:71:bf:... MAC automatically. Addresses never collide with existing) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 103.79 Tm (devices, interface addresses, or the DHCP pool range.) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 32.00 Tm (Warden32 User Guide - engine 0.3.0) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 496.28 32.00 Tm (page 2 / 7) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 5246 >>
+stream
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 776.89 Tm (4.2 The managed table) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 764.39 Tm (Columns: device \(id, archetype, traffic profile\), zone, ipv4, iface, demand) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 747.19 Tm (Mbps, cap Mbps, state, actions.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 727.99 Tm (- demand — commit on blur/Enter; empty restores the archetype default) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 716.79 Tm (\(shown as default x.xx\). This is the volume the activity page will try to) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 699.59 Tm (deliver over the selected window.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 680.39 Tm (- cap — a configured *target*, committed on blur/Enter, empty = none.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 669.19 Tm (When demand exceeds the cap the row shows a demand above cap chip.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 649.99 Tm (- state — online / offline \(engine-level control; resets when the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 638.79 Tm (engine rebuilds\) and a compromised checkbox \(persists in the project) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 621.59 Tm (file; compromised devices run the compromised activity profile\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 602.39 Tm (- actions — remove for removable IoT devices only. The ESP32 router,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 591.19 Tm (gateways and external hosts are protected. Removing a device also cleans) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 573.99 Tm (up port forwards and rules that reference it.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 554.79 Tm (- mark all compromised / clear compromised buttons set the flag for every) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 543.59 Tm (managed IoT device at once — handy for before/after demonstrations.) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 515.39 Tm (4.3 Honesty: caps are not enforceable) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 502.89 Tm (The stock 4-list ACL has no rate limiting and no fairness concept, so a) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 485.69 Tm (per-device Mbps cap cannot be enforced by the firmware this lab simulates. The) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 468.49 Tm (cap is a configuration target; the activity page reports it as) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 451.29 Tm (not enforceable and shows demand vs cap so you can see how far the target is) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 434.09 Tm (from reality. \(The stateful target-v1 dialect could enforce packet-rate) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 416.89 Tm (rules, but still not Mbps shaping — the note on the activity page reflects the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 399.69 Tm (active dialect.\)) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 371.49 Tm (4.4 Uplink rate) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 358.99 Tm ([uplink] bandwidth available to the ESP32 sets the WAN link rate used for) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 341.79 Tm (capacity accounting \(default 100 Mbps — the LAN8720 is a 100 Mbit/s PHY,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 324.59 Tm (datasheet\). Two different ceilings matter:) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 305.39 Tm (- the link rate \(what the PHY carries\), and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 292.19 Tm (- the routed ESP32 throughput estimate, 5–15 Mbps \(estimate from) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 280.99 Tm (literature\) — the router becomes the bottleneck long before the link does.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 263.79 Tm (The uplink number does not shape traffic: queueing is not simulated, and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 246.59 Tm (the model says so. Instead, the activity page reports total demand, saturation) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 229.39 Tm (percentage and an over-subscription warning compared against both ceilings.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 197.19 Tm (5. Activity — normal and compromised IoT behaviour \(M10\)) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 182.69 Tm (Open the activity page.) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 154.49 Tm (5.1 What a run does) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 141.99 Tm (For every managed IoT device \(role iot, zones guest/trusted/mgmt, not the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 124.79 Tm (router\), the engine:) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 105.59 Tm (1. picks the activity set — normal profile from the device's traffic profile,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 94.39 Tm (or the compromised set \(C2 beaconing, DNS tunnelling, LAN scanning,) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 32.00 Tm (Warden32 User Guide - engine 0.3.0) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 496.28 32.00 Tm (page 3 / 7) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 5447 >>
+stream
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 787.89 Tm (exfiltration\) when the device is compromised or the mode forces it;) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 768.69 Tm (2. sizes each activity from the device's demand within the chosen window;) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 755.49 Tm (3. schedules flows with seeded jitter \(mulberry32, seed from the field\);) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 742.29 Tm (4. submits every flow through the real pipeline — the same classify ->) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 731.09 Tm (offline -> quarantine -> policy -> NAPT -> route -> verdict path as manual) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 713.89 Tm (traffic. Verdicts, drops, NAT state and events are real engine results;) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 694.69 Tm (5. advances the engine clock to the end of the window.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 683.49 Tm (Determinism: same project + same seed + same window = byte-identical flows,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 666.29 Tm (every time, in every browser. Consecutive runs continue the engine clock \(a) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 649.09 Tm (run advances time — that is the point\).) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 620.89 Tm (5.2 Controls) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 606.39 Tm (- window — 5 minutes, 1 hour, 6 hours or 24 hours of simulated time.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 593.19 Tm (- mode — use device states \(compromised devices run compromised) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 581.99 Tm (profiles, the rest normal\), force normal, force compromised.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 562.79 Tm (- seed — integer; defaults to the project seed.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 549.59 Tm (- run activity — executes and stores the report. Device or bandwidth) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 538.39 Tm (edits clear a stale report; results are never silently kept.) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 510.19 Tm (5.3 Reading the report) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 495.69 Tm (- summary — flows, verdict counts \(allowed/denied/dropped/) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 484.49 Tm (not-enforceable\), MB attempted vs allowed, average consumed Mbps, and the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 467.29 Tm (engine clock after the run.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 448.09 Tm (- capacity — uplink rate, total demand, total consumed, saturation meter,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 436.89 Tm (the 5–15 Mbps router ceiling, and the per-device-caps-not-enforceable note) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 419.69 Tm (with its dialect-aware explanation. over-subscribed appears when demand) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 402.49 Tm (exceeds the link rate.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 383.29 Tm (- per-device accounting — demand, cap, attempted Mbps, consumed Mbps) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 372.09 Tm (\(verdict allowed only\), peak Mbps \(busiest simulated minute\), sent MB,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 354.89 Tm (received MB, and verdict chips per device.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 335.69 Tm (- per-activity breakdown — every activity with its target, flow count) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 324.49 Tm (and allowed bytes.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 305.29 Tm (- notes & export — the honesty notes for the run plus export JSON,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 294.09 Tm (export CSV and export markdown \(same report shaped for spreadsheets and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 276.89 Tm (papers\).) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 248.69 Tm (5.4 Sampling honesty) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 236.19 Tm (A 24-hour camera window would be tens of thousands of real events; the engine) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 218.99 Tm (generates *sampled representations*: each generated flow aggregates) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 201.79 Tm (sampleOf raw events and its byte size is the summed volume. Byte totals) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 184.59 Tm (equal the configured demand \(the accounting is exact\); flow counts are) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 167.39 Tm (samples, not packet traces. The report says this explicitly. Similarly, peak) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 150.19 Tm (tracks the average closely because samples are spread evenly — no fabricated) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 132.99 Tm (burst structure.) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 104.79 Tm (5.5 What the sample project shows) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 92.29 Tm (With the sample lab \(uplink 100 Mbps, camera demand 2.5 Mbps, plug/thermostat) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 32.00 Tm (Warden32 User Guide - engine 0.3.0) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 496.28 32.00 Tm (page 4 / 7) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 5493 >>
+stream
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 781.89 Tm (0.05 Mbps\) a 1-hour use device states run produces roughly 720 flows and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 764.69 Tm (1.17 GB attempted at 2.6 Mbps average — about 2.6% of the link, well under) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 747.49 Tm (even the pessimistic 5 Mbps router ceiling.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 730.29 Tm (Now tick the camera's compromised checkbox on the devices page and re-run) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 713.09 Tm (with use device states: the camera's activity switches to C2 beacons) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 695.89 Tm (\(203.0.113.66:8443\), DNS tunnelling \(203.0.113.53:53\), LAN scanning) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 678.69 Tm (\(10.0.0.0/24:445\) and exfiltration \(203.0.113.65:443\). Note that with the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 661.49 Tm (stock firmware and default-ALLOW these flows are allowed — that is the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 644.29 Tm (finding, not a bug: the stock ACL cannot rate-limit or meaningfully prevent) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 627.09 Tm (egress, and caps remain unenforceable. Quarantine the device on the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 609.89 Tm (incident page \(or add deny rules on rules\) and re-run to watch the same) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 592.69 Tm (profile get dropped.) Tj ET
+BT /F2 9.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 564.49 Tm (5.6 Shareable deep links) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 549.99 Tm (- ?page=activity&run=activity — run in "use device states" mode on load) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 536.79 Tm (- ?page=activity&run=activity-normal — force normal) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 523.59 Tm (- ?page=activity&run=activity-compromised — force compromised) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 512.39 Tm (The run is a normal deterministic run; the page just doesn't wait for your) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 495.19 Tm (click. Documented, not hidden.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 462.99 Tm (6. The other pages \(short tour\)) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 446.49 Tm (- overview — lab at a glance: pipeline sketch, honesty ledger, quick) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 435.29 Tm (controls, recent events. Good first stop.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 416.09 Tm (- topology — the kit-19 canvas: zones, devices, links, the bypass arc) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 404.89 Tm (\(traffic that never touches the router\), RMII/reference details. Everything) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 387.69 Tm (is draggable \(positions persist per project; # resets\). Click a node to) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 370.49 Tm (inspect; toggle interfaces and links here.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 351.29 Tm (- traffic — manual flow lab: pick a device, a behaviour state) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 340.09 Tm (\(normal/noisy/misconfigured/compromised\), a target and a profile; submit) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 322.89 Tm (single flows or small batches and read the 5-stage trace in packets.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 303.69 Tm (- rules — edit stateful rules and the stock 4-list ACL per interface,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 292.49 Tm (port forwards, default policies. Rule hit counters appear in the right) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 275.29 Tm (pane rules tab. The stock dialect refuses rule types it cannot express.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 256.09 Tm (- attacks — 12 scenarios \(ARP spoof, rogue DHCP, DNS spoof, lateral) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 244.89 Tm (movement, C2 beacon, exfiltration, deauth — wifi-deauth and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 227.69 Tm (dhcp-starvation are explicitly *not modeled* and say so\). Run one,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 210.49 Tm (inspect, then respond.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 191.29 Tm (- incident — incident log from attack runs; quarantine/release devices;) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 180.09 Tm (addBlockRule \(stock honestly refuses: it cannot block a source host\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 160.89 Tm (- resources — RAM \(180 KB base + per-flow costs\), CPU window, airtime,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 149.69 Tm (TX queue, conntrack/NAPT occupancy; 7 failure injections; link/device) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 132.49 Tm (toggles. Everything is estimate-tagged.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 113.29 Tm (- experiments — baselines P-A \(stock, permissive\), P-B \(stock, rules\),) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 102.09 Tm (P-C \(target-v1 stateful\), plus the P-D label; run the suite, compare) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 32.00 Tm (Warden32 User Guide - engine 0.3.0) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 496.28 32.00 Tm (page 5 / 7) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 13 0 R >>
+endobj
+15 0 obj
+<< /Length 5401 >>
+stream
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 787.89 Tm (results, export JSON/CSV/Markdown with provenance and engine version.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 768.69 Tm (- compare — side-by-side verdict matrices across baselines/experiments.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 755.49 Tm (- hardware — the validation checklist: everything you must measure on a) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 744.29 Tm (real board to replace estimate placeholders. Never auto-fills values.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 725.09 Tm (- registry — boards, ethernet adapters, firmware profiles, archetypes;) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 713.89 Tm (the provenance of everything the sim can instantiate.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 694.69 Tm (- docs — in-app index of the documentation set.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 668.49 Tm (7. Exports and reproducibility) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 653.99 Tm (All exports are stamped with tool name, engine version and \(where relevant\)) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 636.79 Tm (project name/seed; imports are versioned and validated.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 617.59 Tm (- warden32-activity.json — full activity report \(devices, activities,) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 606.39 Tm (capacity, notes\) minus per-flow results.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 587.19 Tm (- warden32-activity.csv — one row per device and per activity.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 573.99 Tm (- warden32-activity.md — paper-ready tables and notes.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 560.79 Tm (- Project files .warden32 — full state; deterministic replay via seed.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 547.59 Tm (- Experiment exports — JSON/CSV/Markdown including provenance tables.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 536.39 Tm (To reproduce someone else's result: same project file, same seed, same) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 519.19 Tm (window, same engine version \(shown in the status bar\). See) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 501.99 Tm (docs/REPRODUCIBILITY.md.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 469.79 Tm (8. FAQ / troubleshooting) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 453.29 Tm (- The page shows old data after an upgrade. Autosave keeps your old) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 442.09 Tm (project. Press new to load the current sample \(this guide assumes it\), or) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 424.89 Tm (open your saved file — both are valid.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 405.69 Tm (- Activity report is empty. No run yet in this session; results are) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 394.49 Tm (in-memory by design \(exports are the way to keep them\). Press) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 377.29 Tm (run activity.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 358.09 Tm (- "no IoT devices in managed zones" notice. Add a device on the devices) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 346.89 Tm (page, or move an existing device into guest/trusted/mgmt.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 327.69 Tm (- Everything is "not enforceable". The stock ACL has no rate limits and) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 316.49 Tm (no fairness. Switch to target-v1 on the hardware page to see the) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 299.29 Tm (stateful dialect story \(packet-rate rules exist, Mbps shaping still ends at) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 282.09 Tm (the ACL\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 262.89 Tm (- My compromised device's flows are still allowed. Default-ALLOW plus no) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 251.69 Tm (deny rules = allowed. Quarantine it or add rules, then re-run.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 232.49 Tm (- Clock cannot move backwards. Consecutive runs advance simulated time;) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 221.29 Tm (reports reflect engine time, not wall clock.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 202.09 Tm (- Screenshots look stale. Browser profile/localStorage reuse; press) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 190.89 Tm (new.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 173.69 Tm (More: docs/TROUBLESHOOTING.md.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 141.49 Tm (9. Limitations \(read this before citing numbers\)) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 124.99 Tm (- Not a packet-level bench: no lwIP emulation, no radio/timing/thermal) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 113.79 Tm (physics; no queueing model \(over-subscription is reported instead\).) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 94.59 Tm (- RAM/CPU/airtime and the 5–15 Mbps routed throughput are seeded estimates) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 32.00 Tm (Warden32 User Guide - engine 0.3.0) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 496.28 32.00 Tm (page 6 / 7) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 15 0 R >>
+endobj
+17 0 obj
+<< /Length 3159 >>
+stream
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 787.89 Tm (calibrated from literature, not measurements.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 768.69 Tm (- Caps are targets; the simulated firmware cannot enforce Mbps shaping.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 755.49 Tm (- Attack coverage is explicit, not complete; unmodeled techniques stay) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 744.29 Tm (labelled.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 725.09 Tm (- Hardware validation is pending: no measured columns are populated until you) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 713.89 Tm (produce them with docs/HARDWARE-CHECKLIST.md.) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 696.69 Tm (Full list: docs/LIMITATIONS.md.) Tj ET
+BT /F2 11 Tf 0.07 0.52 0.4 rg 1 0 0 1 54.00 664.49 Tm (10. Documentation map) Tj ET
+BT /F2 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 645.99 Tm (doc                        what it covers) Tj ET
+BT /F1 8 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 635.99 Tm (-----------------------------------------------------------------------) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 625.99 Tm (ARCHITECTURE.md            module map, storage, determinism) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 615.99 Tm (PIPELINE.md                every pipeline stage in order) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 605.99 Tm (FIREWALL.md                dialects, ACL semantics, what is enforceable) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 595.99 Tm (VERIFIED-FACTS.md          sources behind every claim) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 585.99 Tm (EXPERIMENT-METHODOLOGY.md  baselines, suite, metrics) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 575.99 Tm (REPRODUCIBILITY.md         seeds, versions, replay recipes) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 565.99 Tm (TEST-PLAN.md               what the 144 tests cover) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 555.99 Tm (EXTENDING.md               adding archetypes/profiles/attacks) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 545.99 Tm (HARDWARE-CHECKLIST.md      real-board validation procedure) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 535.99 Tm (LIMITATIONS.md             honest capability boundary) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 525.99 Tm (TROUBLESHOOTING.md         common symptoms and fixes) Tj ET
+BT /F1 8 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 515.99 Tm (DECISIONS.md               dated design decisions log) Tj ET
+BT /F1 8 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 499.99 Tm (--------------------------------------------------------------------------------------------) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 483.39 Tm (Warden32 is defensive research tooling. Use the attack scenarios only on) Tj ET
+BT /F1 8.5 Tf 0.12 0.15 0.18 rg 1 0 0 1 54.00 466.19 Tm (networks and hardware you own or are authorized to test \(SECURITY.md\).) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 54.00 32.00 Tm (Warden32 User Guide - engine 0.3.0) Tj ET
+BT /F1 7.5 Tf 0.45 0.52 0.58 rg 1 0 0 1 496.28 32.00 Tm (page 7 / 7) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 17 0 R >>
+endobj
+xref
+0 19
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000156 00000 n 
+0000000251 00000 n 
+0000000351 00000 n 
+0000006541 00000 n 
+0000006683 00000 n 
+0000012062 00000 n 
+0000012204 00000 n 
+0000017502 00000 n 
+0000017645 00000 n 
+0000023145 00000 n 
+0000023289 00000 n 
+0000028835 00000 n 
+0000028979 00000 n 
+0000034433 00000 n 
+0000034577 00000 n 
+0000037789 00000 n 
+trailer
+<< /Size 19 /Root 1 0 R >>
+startxref
+37933
+%%EOF
